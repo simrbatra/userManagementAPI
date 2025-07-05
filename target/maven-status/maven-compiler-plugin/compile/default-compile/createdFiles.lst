@@ -1,0 +1,5 @@
+com\example\usermanagementapi\controller\UserController.class
+com\example\usermanagementapi\exception\GlobalExceptionHandler.class
+com\example\usermanagementapi\UsermanagementapiApplication.class
+com\example\usermanagementapi\model\User.class
+com\example\usermanagementapi\repository\UserRepository.class
