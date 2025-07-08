@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Users</title>
+</head>
+<body>
+<h2>Create New Users</h2>
+
+<form id="userForm">
+    <div id="userFields">
+        <div class="user-input">
+            <input type="text" name="name" placeholder="Enter Name" required>
+            <input type="email" name="email" placeholder="Enter Email" required>
+        </div>
+    </div>
+    <button type="button" onclick="addMoreUserFields()">Add Another User</button><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<div id="response"></div>
+
+<script>
+    function addMoreUserFields() {
+      const userFields = document.getElementById('userFields');
+      const div = document.createElement('div');
+      div.className = 'user-input';
+      div.innerHTML = `
+        <input type="text" name="name" placeholder="Enter Name" required>
+        <input type="email" name="email" placeholder="Enter Email" required>
+      `;
+      userFields.appendChild(div);
+    }
+
+    document.getElementById('userForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const inputs = document.querySelectorAll('.user-input');
+      const users = [];
+
+      inputs.forEach(group => {
+        const name = group.querySelector('input[name="name"]').value.trim();
+        const email = group.querySelector('input[name="email"]').value.trim();
+        if (name && email) {
+          users.push({ name, email });
+        }
+      });
+
+      try {
+        const response = await fetch('http://localhost:8080/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(users)
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        document.getElementById('response').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+      } catch (error) {
+        document.getElementById('response').innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+      }
+    });
+</script>
+</body>
+</html>
